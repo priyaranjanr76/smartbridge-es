@@ -1,0 +1,33 @@
+Q. A program to rotate or change the drection of rotation(clockwise/anticlockwise) using 2 switch
+
+
+
+Syntax:
+#ifndef F_CPU
+#define F_CPU 16000000UL
+#endif
+#include<avr/io.h>
+#ifndef F_CPU
+#define F_CPU 16000000UL
+#endif
+#include<avr/io.h>
+#include<util/delay.h>
+int main(void)
+{
+	DDRC|=(1<<PC0);
+	DDRD&=~(1<<PD0);
+	DDRB&=~(1<<PB0);
+	while(1)
+	{
+		if((PIND&(1<<PD0))==0)
+		{
+			PORTC=0x01;
+			_delay_ms(1000);
+		}
+		if((PINB&(1<<PB0))==0)
+		{
+			PORTC=0x02;
+			_delay_ms(1000);
+		}
+	}
+}

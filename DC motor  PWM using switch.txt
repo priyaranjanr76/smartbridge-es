@@ -1,0 +1,42 @@
+#ifndef F_CPU
+#define F_CPU 16000000UL
+#endif
+#include<avr/io.h>
+#ifndef F_CPU
+#define F_CPU 16000000UL
+#endif
+#include<avr/io.h>
+#include<util/delay.h>
+void PWM_init()
+{
+	TCCR0=(1<<WGM00)|(1<<WGM01)|(1<<COM01)|(1<<CS00);
+	DDRB|=(1<<PB3);    //connect the motor to PB3 
+	
+}
+int main(void)
+{
+	DDRC|=(1<<PC0);
+	DDRD&=~(1<<PD0);
+	DDRB&=~(1<<PB0);
+	unsigned char duty;
+	PWM_init();
+	while(1)
+	{
+		if((PIND&(1<<PD0))==0)
+		{
+			for(duty=0;duty<255;duty++)
+			{
+				OCR0=duty;
+				_delay_ms(8);
+			}
+					}
+		if((PINB&(1<<PB0))==0)
+		{
+			for(duty=255;duty>1;duty--)
+			{
+				OCR0=duty;
+				_delay_ms(8);
+			}
+					}
+	}
+}
