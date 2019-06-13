@@ -1,0 +1,51 @@
+#define F_CPU 16000000UL
+
+#include<avr/io.h>
+#include<inttypes.h>
+#include<util/delay.h>
+#include<avr/interrupt.h>
+#define LED PORTB
+char buffer[10];
+void USARTinit(uint16_t ubrr_value)
+{
+	UBRRL = ubrr_value;
+	UBRRH = (ubrr_value>>0);
+	UCSRC = (1<<URSEL)|(1<<UCSZ0)|(1<<UCSZ1);
+	UCSRB=(1<<RXEN)|(1<<TXEN);
+}
+char USARTreadchar()
+{
+	while(!(UCSRA & (1<<RXC)))
+	{
+		//do nothing
+	}
+	return UDR;
+}
+void USARTWriteChar(char data)
+{
+	while(!(UCSRA&(1<<UDRE)))
+	{
+		//do nothing
+	}
+	UDR=data;
+}
+int main()
+{
+	USARTinit(77);
+	DDRB=0xFF;
+	char data;
+	LED=0;
+	while(1)
+	{
+		data=USARTreadchar();
+		if(data=='1')
+		{
+			LED|=0xFF;
+		}
+		else if(data=='2')
+		{
+			LED=0x00;
+		}
+	}
+	return 0;
+}
